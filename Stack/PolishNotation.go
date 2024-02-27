@@ -2,6 +2,11 @@ package Stack
 
 import "fmt"
 
+/*
+https://habr.com/ru/articles/282379/
+https://www.sas.com.ru/wp/ru/preobrazovatel-prostogo-infiksa-v-postfiks-ili-prefiks/
+*/
+
 func InfixToPostfix(infix string) *Stack {
 	outputStack := Create()    // Создаем стек выхода
 	operationStack := Create() // Создаем стек операций
@@ -29,7 +34,7 @@ func InfixToPostfix(infix string) *Stack {
 			break
 
 		case operators[char]:
-			if operationStack.isEmpty() {
+			if operationStack.IsEmpty() {
 				operationStack.Push(char)
 			} else {
 				peek, err := operationStack.Peek()
@@ -104,7 +109,7 @@ func PostfixCount(postfixCount *Stack) *Stack {
 		"/": func(a, b int32) int32 { return a / b },
 	}
 
-	for !postfixCount.isEmpty() {
+	for !postfixCount.IsEmpty() {
 		peek, err := postfixCount.Peek()
 		if err != nil {
 			return nil
@@ -114,7 +119,7 @@ func PostfixCount(postfixCount *Stack) *Stack {
 		case int32:
 			value, _ := postfixCount.Pop()
 			peek, _ = postfixCount.Peek()
-			if fmt.Sprintf("%v", peek) == "-" && result.isEmpty() {
+			if fmt.Sprintf("%v", peek) == "-" && result.IsEmpty() {
 				value = value.(int32) * -1
 				_, _ = postfixCount.Pop()
 			}

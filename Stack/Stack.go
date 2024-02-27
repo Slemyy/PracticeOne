@@ -48,7 +48,7 @@ func (stack *Stack) Peek() (interface{}, error) {
 	return stack.head.data, nil
 }
 
-func (stack *Stack) isEmpty() bool {
+func (stack *Stack) IsEmpty() bool {
 	if stack.head == nil {
 		return true
 	} else {
