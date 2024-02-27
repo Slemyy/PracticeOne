@@ -9,6 +9,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -92,6 +93,45 @@ func main() {
 	fmt.Println("Первый текст:", Stack.IsValidHooks(badText))
 	fmt.Println("Второй текст:", Stack.IsValidHooks(normalText))
 
+	BST := &Stack.BinarySearchTree{}
+
+	BST.Insert(6)
+	BST.Insert(5)
+	BST.Insert(3)
+	BST.Insert(16)
+	BST.Insert(14)
+	BST.Insert(13)
+	BST.Insert(15)
+
+	fmt.Println()
+	BST.DepthFirstSearch()
+	fmt.Println()
+	BST.Print()
+
+	fmt.Println()
+	passwordManager := Stack.Create()
+	passwordManager.Push("edfgerdg")
+	passwordManager.Push("354534")
+	passwordManager.Push("AD534")
+	passwordManager.Push("&$)@#_)_@_)")
+	passwordManager.Println()
+
+	delPassword, _ := passwordManager.Pop()
+	fmt.Println("Удаленный пароль:", delPassword)
+	passwordManager.Println()
+
+	redo, _ := passwordManager.Redo()
+	fmt.Println("Повторное удаление пароля:", redo)
+	passwordManager.Println()
+
+	passwordManager.Undo()
+	fmt.Print("Удаленный пароль востановлен: ")
+	passwordManager.Println()
+
+	redo, _ = passwordManager.Redo()
+	fmt.Println("Повторное удаление пароля:", redo)
+	passwordManager.Println()
+
 	/*
 			QUEUE
 		(1) Первое задание
@@ -138,6 +178,33 @@ func main() {
 			QUEUE
 		(3) Третье задание
 	*/
+
+	fmt.Println()
+	queue := Queue.Create()
+
+	tasksSec := []Queue.Task{
+		{ID: 1, Name: "Сканировать на наличие вредоносного ПО"},
+		{ID: 2, Name: "Обновить определения антивируса"},
+		{ID: 3, Name: "Мониторинг сетевого трафика"},
+		{ID: 4, Name: "Анализ системных журналов"},
+		{ID: 5, Name: "Исправьте уязвимости программного обеспечения"},
+		{ID: 6, Name: "Тестовое задание"},
+		{ID: 7, Name: "Проверочное задание"},
+	}
+
+	var wg sync.WaitGroup
+	numWorkers := 3
+
+	for i := 1; i <= numWorkers; i++ {
+		wg.Add(1)
+		go Queue.SecurityWorker(i, queue, &wg)
+	}
+
+	for _, task := range tasksSec {
+		queue.Enqueue(task)
+	}
+
+	wg.Wait()
 
 	/*
 			QUEUE

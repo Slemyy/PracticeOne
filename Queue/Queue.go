@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"sync"
 	"time"
 )
 
@@ -121,5 +122,25 @@ func (queue *Queue) ProcessCyberData() {
 		} else {
 			fmt.Println("В данных обнаружены уязвимости!")
 		}
+	}
+}
+
+type Resource struct {
+	data  Task
+	mutex sync.RWMutex
+}
+
+func SecurityWorker(id int, queue *Queue, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	for {
+		time.Sleep(100 * time.Millisecond)
+		task, err := queue.Dequeue()
+		if err != nil {
+			fmt.Printf("Безопасник %d завершил работу.\n", id)
+			return
+		}
+
+		fmt.Printf("Безопасник %d выполняет задачу: %v\n", id, task)
 	}
 }
